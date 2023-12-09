@@ -15,7 +15,7 @@ import numpy as np
 learning_rate = 0.0001
 gamma         = 0.98
 lmbda         = 0.99
-eps_clip      = 0.0005
+eps_clip      = 0.0001
 K_epoch       = 5
 
 # action과 position을 저장하는 queue의 len

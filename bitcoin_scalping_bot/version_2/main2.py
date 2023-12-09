@@ -9,7 +9,8 @@ import warnings
 import pickle
 warnings.filterwarnings('ignore')
 
-T_horizon = 128
+T_horizon = 32
+
 date_log = []
 value_log = []
 action_log = []
