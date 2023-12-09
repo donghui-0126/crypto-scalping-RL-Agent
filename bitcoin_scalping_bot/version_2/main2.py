@@ -16,43 +16,38 @@ action_log = []
 reward_log = []
 
 def main(model_name, risk_adverse, epochs = 100, transaction=0.0002):
-    with open('upbit_data\\train_data_2023_3D.pkl', 'rb') as f:
+    with open('bitcoin_scalping_bot\\upbit_data\\train_data_2023_3D.pkl', 'rb') as f:
         df = pickle.load(f)
-    df_index = pd.read_csv("upbit_data\\train_data_2023_3D_index.csv", index_col=0)
+    df_index = pd.read_csv("bitcoin_scalping_bot\\upbit_data\\train_data_2023_3D_index.csv", index_col=0)
     
     print("데이터 적재 완료...")
     if model_name=="ppo2":
         model = PPO2()
 
+    env = Environment2(df, list(df_index.index), risk_adverse = risk_adverse, transaction=transaction, max_leverage=5)
+    state = env.reset()
+        
+    h1_out = (torch.zeros([1, 1, 64], dtype=torch.float), torch.zeros([1, 1, 64], dtype=torch.float))
+    
+        
     for n_epi in tqdm.tqdm(range(epochs)):
-        env = Environment2(df, list(df_index.index), risk_adverse = risk_adverse, transaction=transaction, max_leverage=5)
-        state = env.reset()
-        
-        h1_out = (torch.zeros([1, 1, 64], dtype=torch.float), torch.zeros([1, 1, 64], dtype=torch.float))
-        
-        state = np.array(state, dtype=np.float32)
-        done = False
-        
-        
-        date = 0
-        
         #position_action 이라는 list를 만들어주기위한 임시 변수
         temp = [5 for x in range(31)] 
         temp.append(0)
         position_action = np.array(temp)
         
-        
+        done = False   
+        date_list = []
+        value_list = []
+        action_list = []
+        reward_list = []
+        balance_list = []
+        coin_list = []
+        position_list = []
+        all_action_list  =[]
+        current_price_list = []
+        index_list = []         
         while not done:
-            date_list = []
-            value_list = []
-            action_list = []
-            reward_list = []
-            balance_list = []
-            coin_list = []
-            position_list = []
-            all_action_list  =[]
-            current_price_list = []
-            index_list = []
             for t in range(T_horizon):
                 h1_in = h1_out
                 
@@ -78,7 +73,7 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002):
                 index = env_step_dict["index"]
                 
 
-                
+                # log 저장
                 date_list.append(state_time)
                 value_list.append(portfolio_value)
                 action_list.append(action)
@@ -91,7 +86,7 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002):
                 index_list.append(index)
 
                 
-                
+                # position action 병합
                 position_action = list(all_action)
                 position_action.append(position)
 
@@ -103,20 +98,24 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002):
                             h1_in, h1_out, done, position_action])
 
                 state = np.array(next_state, dtype=np.float32)
+
+                if done==True:
+                    break
                 
-            
             model.train_net()
         
-            log = pd.DataFrame([date_log, value_list, action_list, reward_list, balance_list, coin_list, position_list, current_price_list, index_list]).T
+            log = pd.DataFrame([date_list, value_list, action_list, reward_list, balance_list, coin_list, position_list, current_price_list, index_list]).T
             log.columns = ["date", "value", "action", "reward", "balance", "coin", "position","price", "index"]
-            log.to_csv("version_2\\train_log\\log_{}.csv".format(n_epi+1))
-        
-    print("# of episode :{} ".format(n_epi+1))
-        
+            log.to_csv("bitcoin_scalping_bot\\version_2\\train_log\\log_{}.csv".format(n_epi+1))
+            
+            if done == True:
+                print("# of episode :{} ".format(n_epi+1))
+                break
+            
     print("#####")
     print("END")
     print("#####")
     
 
 if __name__ == '__main__':
-    main(model_name="ppo2", risk_adverse=1.2, epochs=100, transaction=0.000)
+    main(model_name="ppo2", risk_adverse=1, epochs=100, transaction=0.000)

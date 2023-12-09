@@ -118,14 +118,23 @@ class Environment2:
         else:
             print("#########################################################################")
             print(f'{current_day}에서 {self.portfolio_value[-1]}으로 trading stop')
-
+            
+            P = self.portfolio_value[-1]
+            B = self.balance[-1]
+            C = self.bitcoin[-1]
+            
+            # 다음날 거래는 다시 1억으로 시작
+            self.balance = [self.balance[0]]  # 포트폴리오가 보유한 현금
+            self.bitcoin = [0]  # 포트폴리오가 보유한 비트코인의 가치 (매 거래마다 바로 청산됨)
+            self.portfolio_value = []
+            
             return {"state_time":current_day, 
                     "next_state":s_prime, 
                     "reward":round(reward,8), 
                     "done":True, 
-                    "portfolio_value":self.portfolio_value[-1], 
-                    "balance":self.balance[-1], 
-                    "bitcoin":self.bitcoin[-1], 
+                    "portfolio_value":P, 
+                    "balance":B, 
+                    "bitcoin":C, 
                     "position":self.position,
                     "action_list":self.action_list,
                     "current_price": self.current_price,
