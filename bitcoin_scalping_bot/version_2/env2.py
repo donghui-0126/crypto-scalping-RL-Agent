@@ -45,6 +45,7 @@ class Environment2:
         self.current_price = self.chart_data[self.idx][self.MID_IDX][-1]
         self.next_price = self.chart_data[self.idx+1][self.MID_IDX][-1]
         
+        self.initial_balance = balance
         self.balance = [balance]  # 포트폴리오가 보유한 현금
         self.bitcoin = [0]  # 포트폴리오가 보유한 비트코인의 가치 (매 거래마다 바로 청산됨)
         self.portfolio_value = []
@@ -117,11 +118,14 @@ class Environment2:
                     "index": self.idx}
         else:
             print("#########################################################################")
-            print(f'{current_day}에서 {self.portfolio_value[-1]}으로 trading stop')
+            print(f'{current_day}에서 {format(round(self.portfolio_value[-1]), ",")}원으로 trading stop')
             
             P = self.portfolio_value[-1]
             B = self.balance[-1]
             C = self.bitcoin[-1]
+            
+            # 다음날로 넘어갈 때 포지션 청산 
+            self.position = 0
             
             # 다음날 거래는 다시 1억으로 시작
             self.balance = [self.balance[0]]  # 포트폴리오가 보유한 현금
@@ -139,10 +143,13 @@ class Environment2:
                     "action_list":self.action_list,
                     "current_price": self.current_price,
                     "index": self.idx}
-      
-        
+    
+    
+    
+    # 로직 다시 점검해야할듯    
     def position_calc(self, action): # max_leverage를 고려해서 position을 계산해주는 함수
         action = self.action_info[action] # action의 실제 action
+        execute_position = self.position
         
         if action * self.position > 0:
             if  self.position + action > self.max_leverage:
@@ -157,7 +164,7 @@ class Environment2:
             else:
                 self.position += action
                 ratio = action
-                return self.position, ratio, False   
+                return self.position, ratio, False
                     
         elif action * self.position < 0:
             self.position = action 
@@ -176,14 +183,14 @@ class Environment2:
         
     def get_reward(self, action):     
         temp_position = self.position
+        
         # Short
         if action <= 4:
-            position, ratio, execution = self.position_calc(action)
-            
-            sell_budget = self.balance[0] * ratio
-            
-            if execution: # 직전 포지션이 long
-                clearing_budget = self.bitcoin[-1] * self.current_price
+            position, ratio, execution = self.position_calc(action)    
+            sell_budget = self.initial_balance * ratio
+            if execution: 
+                # 직전 포지션이 long, clearing_budget: (+)
+                clearing_budget = (self.bitcoin[-1]) * self.current_price
                 # 이전에 매수를 한 경우 => 현재 매도(long 청산)
                 self.balance.append(self.balance[-1] - sell_budget*(1-self.transaction) + clearing_budget*(1-self.transaction)) # clearing budget logic이 오류가 있음.
                 self.bitcoin.append(sell_budget/self.current_price)          
@@ -193,16 +200,16 @@ class Environment2:
         
             current_value = self.portfolio_value[-1]
             next_value = self.balance[-1] + self.bitcoin[-1]*(self.next_price)
-            reward = next_value/current_value - 1
+            reward = (next_value - current_value) / self.initial_balance
             return reward
             
         # Long
         elif action >= 6:
             position, ratio, execution = self.position_calc(action)
-            buy_budget = self.balance[0] * ratio
-            
+            buy_budget = self.initial_balance * ratio
+    
             if execution: # 직전 포지션 short
-                clearing_budget = self.bitcoin[-1] * self.current_price
+                clearing_budget = (self.bitcoin[-1]) * self.current_price
                 self.balance.append(self.balance[-1] - buy_budget*(1+self.transaction) + clearing_budget*(1+self.transaction)) # clearing budget logic이 오류가 있음.
                 self.bitcoin.append(buy_budget/self.current_price)              
 
@@ -212,12 +219,13 @@ class Environment2:
             
             current_value = self.portfolio_value[-1]
             next_value = self.balance[-1] + self.bitcoin[-1]*(self.next_price)
-            reward = next_value/current_value-1   
+            reward = (next_value - current_value) / self.initial_balance
             return reward
         
         # HOLD
         elif action == 5:
-    
-            reward = -abs(self.next_state[self.PCT_IDX][-1])/4
+            current_value = self.portfolio_value[-1]
+            next_value = self.balance[-1] + self.bitcoin[-1]*(self.next_price)
+            reward = (next_value - current_value) / self.initial_balance
             return reward
         

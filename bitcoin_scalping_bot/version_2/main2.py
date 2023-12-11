@@ -9,7 +9,7 @@ import warnings
 import pickle
 warnings.filterwarnings('ignore')
 
-T_horizon = 32
+T_horizon = 64
 
 date_log = []
 value_log = []
@@ -119,4 +119,4 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002):
     
 
 if __name__ == '__main__':
-    main(model_name="ppo2", risk_adverse=1, epochs=100, transaction=0.000)
+    main(model_name="ppo2", risk_adverse=2, epochs=100, transaction=0.0004)

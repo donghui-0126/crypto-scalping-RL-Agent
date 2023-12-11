@@ -12,11 +12,11 @@ import time
 import numpy as np
 
 #Hyperparameters
-learning_rate = 0.0001
+learning_rate = 0.0005
 gamma         = 0.98
 lmbda         = 0.99
-eps_clip      = 0.0001
-K_epoch       = 5
+eps_clip      = 0.01
+K_epoch       = 10
 
 # action과 position을 저장하는 queue의 len
 len_action_queue = 32
