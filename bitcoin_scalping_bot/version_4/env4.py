@@ -97,7 +97,7 @@ class Environment4:
                     "index": self.idx}
         else:
             print("#########################################################################")
-            print(f'{current_day}에서 {format(round(self.portfolio_value[-1]), ",")}원으로 trading stop')
+            print(f'{current_day}에서 {format(round(self.portfolio_value[-1]), ",")}원으로 trading stop, {round((self.portfolio_value[-1]/100000000-1)*100,0)}%')
             
             P = self.portfolio_value[-1]
             B = self.balance[-1]

@@ -33,6 +33,7 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverag
         
     for n_epi in tqdm.tqdm(range(epochs)):
         #position_action 이라는 list를 만들어주기위한 임시 변수
+        print(" # of episode :{} ".format(n_epi+1))
         temp = [5 for x in range(31)] 
         temp.append(0)
         position_action = np.array(temp)
@@ -110,7 +111,6 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverag
             log.to_csv("bitcoin_scalping_bot\\version_4\\train_log\\log_{}.csv".format(n_epi+1))
             
             if done == True:
-                print("# of episode :{} ".format(n_epi+1))
                 break
             
     print("#####")
@@ -119,4 +119,4 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverag
     
 
 if __name__ == '__main__':
-    main(model_name="ppo4", risk_adverse=3, epochs=300, transaction=0.004, max_leverage=10)
+    main(model_name="ppo4", risk_adverse=5, epochs=300, transaction=0.004, max_leverage=10)
