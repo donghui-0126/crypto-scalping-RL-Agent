@@ -16,6 +16,7 @@
 
 저는 여기서 Reinforcement Learning가 적용될 수 있다고 생각했습니다. <br>
 Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 Data-Base 모델로 이길 수 있다고 생각했습니다. 
+
 그래서 이 프로젝트를 시작했습니다. 
 
 # **데이터**
