@@ -3,3 +3,7 @@ bitcoin_scalping_bot/upbit_data/train_data_2023.csv
 bitcoin_scalping_bot/upbit_data/df_2023.csv
 bitcoin_scalping_bot/upbit_data/train_data_2023_3D.pkl
 bitcoin_scalping_bot/upbit_data/train_data_2023_3D_index.csv
+bitcoin_scalping_bot/upbit_data/train_data_2023_3D_version4.pkl
+data/binance_data.pkl
+data/BTCUSD_1min.pkl
+data/final_df.csv
