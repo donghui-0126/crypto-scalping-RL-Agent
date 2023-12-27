@@ -28,7 +28,7 @@ class PPO4(nn.Module):
 
         self.conv2d_1 = nn.Conv2d(in_channels=1, out_channels=8, kernel_size=(12, 2), stride=(12, 2))
         self.bn1 = nn.BatchNorm2d(8)
-        self.conv2d_2 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=(2, 17), stride=1)
+        self.conv2d_2 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=(1, 17), stride=1)
         self.bn2 = nn.BatchNorm2d(16)
         self.conv2d_3 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=(1, 9), stride=1)
         self.bn3 = nn.BatchNorm2d(32)
@@ -41,12 +41,12 @@ class PPO4(nn.Module):
 
         self.fc_v1 = nn.Linear(64, 32)
         self.fc_v2 = nn.Linear(32 + len_action_queue, 16)
-        self.fc_v3 = nn.Linear(16, 1)
+        self.fc_v3 = nn.Linear(16, 5)
 
         self.optimizer = optim.Adam(self.parameters(), lr=learning_rate)
 
     def pi(self, x, hidden1, previous_action):
-        x = x.reshape([-1, 1, 24, 64])
+        x = x.reshape([-1, 1, 12, 64])
         x = F.relu(self.bn1(self.conv2d_1(x)))
         x = F.relu(self.bn2(self.conv2d_2(x)))
         x = F.relu(self.bn3(self.conv2d_3(x)))
@@ -63,7 +63,7 @@ class PPO4(nn.Module):
         return prob, lstm_hidden1
 
     def v(self, x, hidden1, previous_action):
-        x = x.reshape([-1, 1, 24, 64])
+        x = x.reshape([-1, 1, 12, 64])
         x = F.relu(self.bn1(self.conv2d_1(x)))
         x = F.relu(self.bn2(self.conv2d_2(x)))
         x = F.relu(self.bn3(self.conv2d_3(x)))

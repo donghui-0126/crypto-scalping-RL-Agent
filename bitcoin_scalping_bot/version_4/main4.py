@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import warnings 
 import pickle
+import os
 warnings.filterwarnings('ignore')
 
 T_horizon = 128
@@ -17,7 +18,7 @@ action_log = []
 reward_log = []
 
 def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverage=10):
-    with open('bitcoin_scalping_bot\\upbit_data\\train_data_2023_3D.pkl', 'rb') as f:
+    with open('bitcoin_scalping_bot\\upbit_data\\train_data_2023_3D_version4.pkl', 'rb') as f:
         df = pickle.load(f)
     df_index = pd.read_csv("bitcoin_scalping_bot\\upbit_data\\train_data_2023_3D_index.csv", index_col=0)
     
@@ -119,4 +120,8 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverag
     
 
 if __name__ == '__main__':
+    filepath = "bitcoin_scalping_bot\\version_4\\train_log"
+    if os.path.exists(filepath):
+        for file in os.scandir(filepath):
+            os.remove(file.path)
     main(model_name="ppo4", risk_adverse=5, epochs=300, transaction=0.004, max_leverage=10)
