@@ -8,59 +8,66 @@ import numpy as np
 import warnings 
 import pickle
 import os
+from utils import data_preprocess
+
 warnings.filterwarnings('ignore')
 
-T_horizon = 128
+T_horizon = 64
 
 date_log = []
 value_log = []
 action_log = []
 reward_log = []
 
-def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverage=10):
-    with open('bitcoin_scalping_bot\\upbit_data\\train_data_2023_3D_version4.pkl', 'rb') as f:
+def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverage=10, num_action=5):
+    with open('C:\\Users\\user\\Documents\\GitHub\\crypto-scalping-RL-Agent\\data\\df_final.pkl', 'rb') as f:
         df = pickle.load(f)
-    df_index = pd.read_csv("bitcoin_scalping_bot\\upbit_data\\train_data_2023_3D_index.csv", index_col=0)
-    
+    with open('C:\\Users\\user\\Documents\\GitHub\\crypto-scalping-RL-Agent\\data\\df_final_raw.pkl', 'rb') as f:
+        df_raw = pickle.load(f)    
     print("데이터 적재 완료...")
+    
+    df_final, df_raw = data_preprocess(df, df_raw, sequence_length=64)
+    print("데이터 전처리 완료...")
+    
     if model_name=="ppo4":
-        model = PPO4()
+        model = PPO4(learning_rate=0.001, eps_clip=0.1, K_epoch=3)
 
-    env = Environment4(df, list(df_index.index), risk_adverse = risk_adverse, transaction=transaction, max_leverage=max_leverage)
+    
+    env = Environment4(df_final, df_raw, risk_adverse = risk_adverse, transaction=transaction, max_leverage=max_leverage)
     state = env.reset()
         
     h1_out = (torch.zeros([1, 1, 64], dtype=torch.float), torch.zeros([1, 1, 64], dtype=torch.float))
     
         
     for n_epi in tqdm.tqdm(range(epochs)):
-        #position_action 이라는 list를 만들어주기위한 임시 변수
         print(" # of episode :{} ".format(n_epi+1))
-        temp = [5 for x in range(31)] 
-        temp.append(0)
-        position_action = np.array(temp)
-        
+        #position_action 이라는 list를 만들어주기위한 임시 변수
+        temp_position = [0 for x in range(32)] 
+        temp_action = [num_action//2 for x in range(32)]
+        temp_action_position = np.array(temp_action+temp_position)
+
         done = False   
-        date_list = []
-        value_list = []
-        action_list = []
-        reward_list = []
-        balance_list = []
-        coin_list = []
-        position_list = []
-        all_action_list  =[]
-        current_price_list = []
-        index_list = []         
+        log_date_list = []
+        log_value_list = []
+        log_action_list = []
+        log_reward_list = []
+        log_balance_list = []
+        log_coin_list = []
+        log_current_price_list = []
+        log_index_list = []
+                 
+        
         while not done:
             for t in range(T_horizon):
                 h1_in = h1_out
                 
-                prob, h1_out = model.pi(torch.from_numpy(state).float(),h1_in, torch.tensor(position_action))
+                prob, h1_out = model.pi(torch.from_numpy(state).float(), h1_in, torch.tensor(temp_action_position))
                 
                 prob = prob.view(-1)
                 
                 action_distribition = Categorical(prob)
                 
-                action = action_distribition.sample().item() # softmax에서 0~11의 값을 return
+                action = action_distribition.sample().item()
                 env_step_dict = env.step(action)
                 
                 state_time = env_step_dict["state_time"]
@@ -70,35 +77,37 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverag
                 portfolio_value = env_step_dict["portfolio_value"]  
                 balance = env_step_dict["balance"]  
                 bitcoin = env_step_dict["bitcoin"]
-                position = env_step_dict["position"]  
-                all_action = env_step_dict["action_list"] 
+                position_list = env_step_dict["position_list"]
+                action_list = env_step_dict["action_list"]  
                 current_price = env_step_dict["current_price"]
                 index = env_step_dict["index"]
                 
 
                 # log 저장
-                date_list.append(state_time)
-                value_list.append(portfolio_value)
-                action_list.append(action)
-                reward_list.append(reward)
-                balance_list.append(balance)
-                coin_list.append(bitcoin)
-                position_list.append(position)
-                all_action_list.append(all_action)
-                current_price_list.append(current_price)
-                index_list.append(index)
+                log_date_list.append(state_time)
+                log_value_list.append(portfolio_value)
+                log_action_list.append(action)
+                log_reward_list.append(reward)
+                log_balance_list.append(balance)
+                log_coin_list.append(bitcoin)
+                log_current_price_list.append(current_price)
+                log_index_list.append(index)
 
                 
                 # position action 병합
-                position_action = list(all_action)
-                position_action.append(position)
+                action_list = list(action_list)
+                position_list = list(position_list)
 
+                action_position_list = action_list + position_list
+                
+                temp_action_position = action_position_list
+                
                 model.put_data([np.array(state, dtype=np.float32),
                             action, 
                             reward,
                             np.array(next_state, dtype=np.float32),\
                             prob[action].item(),\
-                            h1_in, h1_out, done, position_action])
+                            h1_in, h1_out, done, action_position_list])
 
                 state = np.array(next_state, dtype=np.float32)
 
@@ -107,12 +116,9 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverag
                 
             model.train_net()
 
-            log = pd.DataFrame([date_list, value_list, action_list, reward_list, balance_list, coin_list, position_list, current_price_list, index_list]).T
+            log = pd.DataFrame([log_date_list, log_value_list, log_action_list, log_reward_list, log_balance_list, log_coin_list, position_list, log_current_price_list, log_index_list]).T
             log.columns = ["date", "value", "action", "reward", "balance", "coin", "position","price", "index"]
             log.to_csv("bitcoin_scalping_bot\\version_4\\train_log\\log_{}.csv".format(n_epi+1))
-            
-            if done == True:
-                break
             
     print("#####")
     print("END")
@@ -124,4 +130,4 @@ if __name__ == '__main__':
     if os.path.exists(filepath):
         for file in os.scandir(filepath):
             os.remove(file.path)
-    main(model_name="ppo4", risk_adverse=5, epochs=300, transaction=0.004, max_leverage=10)
+    main(model_name="ppo4", risk_adverse=2, epochs=300, transaction=0.004, max_leverage=10)

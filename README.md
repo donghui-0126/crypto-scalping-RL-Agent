@@ -38,6 +38,8 @@ Agent가 매수/매도 주문을 넣고 다음 1분안에 모든 주문이 체�
 * version_2: CNN사용, 기술적 지표도 사용함. 
 * version_3: version_2에서 action을 단순화함.
 * version_4: entropy term을 loss값에 추가. batch nomalization 사용.
+* version_5: Alphazero 논문 참고해서 인간의 지식없이 학습하는 방법 찾기
+             alphastar논문에서 나온 delay에서 차용해서 전략의 시간의 가용시간을 스스로 찾도록 하기
 * 추후 개선방안: VPIN과 같은 지표 사용. 기술적지표 추가. Data 정규화.  
 <br>
 

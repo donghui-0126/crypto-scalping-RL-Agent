@@ -1,5 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+from tqdm import tqdm
 import os
 
 def pnl_graph(num):
@@ -53,3 +55,23 @@ def reward_graph(num):
     plt.ylabel("Frequency")
     plt.xticks([-1, 1])
     plt.show()    
+    
+    
+def data_preprocess(df, df_raw, sequence_length=64):
+    # 주어진 데이터프레임을 슬라이싱
+    n_samples = len(df) - sequence_length + 1
+
+    # Extract the data as a NumPy array
+    data_array = df.to_numpy()
+
+    # Create an empty array to store the input sequences
+    input_sequences = np.empty((n_samples, (df.shape[1]), sequence_length))
+
+    for i in tqdm(range(n_samples)):
+        input_seq = data_array[i:i + sequence_length, :].T  # Transpose to have (24, 60) shape
+        input_sequences[i] = input_seq
+        
+    df_raw = df_raw.iloc[sequence_length-1:]
+    
+    print(input_sequences.shape, df_raw.shape)
+    return input_sequences, df_raw

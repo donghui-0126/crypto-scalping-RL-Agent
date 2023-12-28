@@ -10,12 +10,10 @@ def pnl_graph(num):
 
     # Plot the first graph (portfolio value)
     df['value'].plot(label="Portfolio Value")
-    plt.xlabel("Min")
     plt.ylabel("Value")
 
     # Plot the second graph (Bitcoin value)
     plt.plot(range(df.shape[0]), (bitcoin['mid_price'] / 21092500.0 * 1e8).iloc[:df.shape[0]], label="Bitcoin Value")
-    plt.xlabel("Index")
     plt.ylabel("Value")
 
     plt.title("Portfolio and Bitcoin Value")
@@ -34,10 +32,10 @@ def action_graph(num):
 
     plt.figure(figsize=(4, 4))
     plt.bar(action_value_counts.index, action_value_counts.values)
-    plt.title("Frequency of 0 to 10 in 'action'")
+    plt.title("Frequency of 0 to 4 in 'action'")
     plt.xlabel("Reward")
     plt.ylabel("Frequency")
-    plt.xticks(range(11))
+    plt.xticks(range(5))
     plt.show()
     
 def reward_graph(num):
