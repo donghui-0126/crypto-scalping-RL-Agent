@@ -58,3 +58,9 @@ Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 D
 => alphazero의 MCTS를 사용하면 될 것 같음.
 
 reward는 전략의 샤프비율/MDD 를 섞으면 될것 같음.
+
+# **version5 algorithm**: 
+1. MCTS와 policy를 기반으로 2분/4분/8분/16분/32분/64분/128분 전략을 구동함(이거는 새로운 뉴럴넷으로 학습?).
+2. 최적의 전략 구동시간을 선택하고 학습한다.
+3. n분 동안 구동된 전략의 sharpe ratio와 MDD를 고려해서 적절한 reward를 return
+4. n분 이후부터 다시 재학습을 시작한다. 
