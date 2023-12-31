@@ -51,15 +51,8 @@ Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 D
 <br>
 
 
-# **메모**
 
-단순히 상승과 하강에 보상을 주니까 학습이 잘 안된다. 
-알파고의 self-play에서 영감을 받아서 자기자신의 수익율을 이기는 모델을 만드는건 어떨까?
-=> alphazero의 MCTS를 사용하면 될 것 같음.
-
-reward는 전략의 샤프비율/MDD 를 섞으면 될것 같음.
-
-# **version5 algorithm**: 
+# **version5 algorithm** 
 1. MCTS와 policy를 기반으로 2분/4분/8분/16분/32분/64분/128분 전략을 구동함(이거는 새로운 뉴럴넷으로 학습?).
 2. 최적의 전략 구동시간을 선택하고 학습한다.
 3. n분 동안 구동된 전략의 sharpe ratio와 MDD를 고려해서 적절한 reward를 return
