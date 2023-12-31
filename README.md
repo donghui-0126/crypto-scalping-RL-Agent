@@ -39,8 +39,9 @@ Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 D
 * version_3: version_2에서 action을 단순화함.
 * version_4: entropy term을 loss값에 추가. batch nomalization 사용.
 * version_5: Alphazero 논문 참고해서 인간의 지식없이 학습하는 방법 찾기
-             alphastar논문에서 나온 delay에서 차용해서 전략의 시간의 가용시간을 스스로 찾도록 하기
-             상황이 주어지면 적절한 delay를 찾고, 모델 평가는 delay된 시점에서만 이뤄짐. (or 스스로 T_horizon을 찾는 방식?)
+             alphastar논문에서 나온 MCTS(monte carlo tree search)에서 차용해서 학습에 트리를 사용
+             
+
 * 추후 개선방안: VPIN과 같은 지표 사용. 기술적지표 추가. Data 정규화.  
 <br>
 
@@ -52,3 +53,6 @@ Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 D
 
 단순히 상승과 하강에 보상을 주니까 학습이 잘 안된다. 
 알파고의 self-play에서 영감을 받아서 자기자신의 수익율을 이기는 모델을 만드는건 어떨까?
+=> alphazero의 MCTS를 사용하면 될 것 같음.
+
+reward는 전략의 샤프비율/MDD 를 섞으면 될것 같음.
