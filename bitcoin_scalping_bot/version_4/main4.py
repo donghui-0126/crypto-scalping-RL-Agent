@@ -19,7 +19,7 @@ value_log = []
 action_log = []
 reward_log = []
 
-def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverage=10, num_action=5):
+def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverage=1, num_action=3):
     with open('C:\\Users\\user\\Documents\\GitHub\\crypto-scalping-RL-Agent\\data\\df_final.pkl', 'rb') as f:
         df = pickle.load(f)
     with open('C:\\Users\\user\\Documents\\GitHub\\crypto-scalping-RL-Agent\\data\\df_final_raw.pkl', 'rb') as f:
@@ -30,7 +30,7 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverag
     print("데이터 전처리 완료...")
     
     if model_name=="ppo4":
-        model = PPO4(learning_rate=0.001, eps_clip=0.1, K_epoch=3)
+        model = PPO4(learning_rate=0.001, eps_clip=0.1, K_epoch=3, action_num=num_action)
 
     
     env = Environment4(df_final, df_raw, risk_adverse = risk_adverse, transaction=transaction, max_leverage=max_leverage)
@@ -130,4 +130,4 @@ if __name__ == '__main__':
     if os.path.exists(filepath):
         for file in os.scandir(filepath):
             os.remove(file.path)
-    main(model_name="ppo4", risk_adverse=2, epochs=300, transaction=0.004, max_leverage=10)
+    main(model_name="ppo4", risk_adverse=1, epochs=300, transaction=0.004, max_leverage=1)

@@ -24,7 +24,7 @@ class Environment4:
         self.bitcoin = [0]  # 포트폴리오가 보유한 비트코인의 가치 (매 거래마다 바로 청산됨)
         self.portfolio_value = []
         
-        self.action_info = [-3, -1, 0, 1, 3]
+        self.action_info = [-1, 0, 1]
         self.action_size = len(self.action_info)
         self.action_list = deque([len(self.action_info)//2 for i in range(32)]) # 이전 32분을 저장함.
 

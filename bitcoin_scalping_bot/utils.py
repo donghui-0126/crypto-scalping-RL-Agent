@@ -32,10 +32,10 @@ def action_graph(num):
 
     plt.figure(figsize=(4, 4))
     plt.bar(action_value_counts.index, action_value_counts.values)
-    plt.title("Frequency of 0 to 4 in 'action'")
+    plt.title("Frequency of 0 to 2 in 'action'")
     plt.xlabel("Reward")
     plt.ylabel("Frequency")
-    plt.xticks(range(5))
+    plt.xticks(range(2))
     plt.show()
     
 def reward_graph(num):
