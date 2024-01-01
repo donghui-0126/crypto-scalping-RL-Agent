@@ -39,15 +39,12 @@ Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 D
 * version 1.2: CNN사용, 기술적 지표도 사용함. 
 * version 1.3: version_2에서 action을 단순화함.
 * version 1.4: entropy term을 loss값에 추가. batch nomalization 사용.
--------
-* version 2.0: Agent 방향성 변경
 
--------
-
-#### **version 2.0 algorithm** 
-1. Select Strategy Duration
-2. Simulate Strategy N times (Reward = Sortino Ratio)
-3. Get Reward that Expectation of N times simulated Reward
+* **version 2.0: Agent 방향성 변경** 
+  * **version 2.0 algorithm** 
+    1. Select Strategy Duration
+    2. Simulate Strategy N times (Reward = Sortino Ratio)
+    3. Get Reward that Expectation of N times simulated Reward
 
 #### Architecture: [link](https://github.com/donghui-0126/crypto-scalping-RL-Agent/blob/main/Scalping_bot.svg)
 
