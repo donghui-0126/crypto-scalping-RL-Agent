@@ -18,10 +18,13 @@ Binance api를 연결후 BTC-USTD 선물거래
 저는 여기서 Reinforcement Learning가 적용될 수 있다고 생각했습니다. <br>
 Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 Data-Base 모델로 이길 수 있다고 생각했습니다. 
 
+-------
 ### **데이터**
 데이터는 upbit의 비트코인 1분봉 데이터를 사용했습니다. <br>
 입력데이터는 지난 60분동안의 가격과 기술적지표에 대한 데이터를 사용합니다.<br>
 각 데이터는 원본 가격데이터와 변화율 데이터를 사용합니다.  
+
+-------
 
 ### **프로젝트 가정**
 - 학습에는 upbit 1분봉 데이터를 사용하지만 long과 short 모두를 가능하다고 가정했습니다.<br>
@@ -38,14 +41,17 @@ Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 D
 * version 1.4: entropy term을 loss값에 추가. batch nomalization 사용.
 -------
 * version 2.0: Agent 방향성 변경
-  
+
+-------
+
 #### **version 2.0 algorithm** 
 1. Select Strategy Duration
 2. Simulate Strategy N times (Reward = Sortino Ratio)
 3. Get Reward that Expectation of N times simulated Reward
 
-Architecture: [link](https://github.com/donghui-0126/crypto-scalping-RL-Agent/blob/main/Scalping_bot.svg)
+#### Architecture: [link](https://github.com/donghui-0126/crypto-scalping-RL-Agent/blob/main/Scalping_bot.svg)
 
+-------
 
 
 ### **프로젝트 기간**
