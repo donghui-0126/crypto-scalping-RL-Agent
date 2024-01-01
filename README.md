@@ -53,7 +53,8 @@ Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 D
 
 
 # **version5 algorithm** 
-1. MCTS와 policy를 기반으로 2분/4분/8분/16분/32분/64분/128분 전략을 구동함(이거는 새로운 뉴럴넷으로 학습?).
-2. 최적의 전략 구동시간을 선택하고 학습한다.
-3. n분 동안 구동된 전략의 sharpe ratio와 MDD를 고려해서 적절한 reward를 return
+
+1. off-policy 알고리즘을 기반으로 학습. (sample efficiency를 위함)
+2. 최적의 전략 구동시간을 선택하고 학습한다. (action을 선택하는 stage가 두단계, 첫번째 단계에서는 [4, 16, 64] 전략의 지속시간 선택, 두번째 단계에서는 [long, execute, short] 선택) (첫번째 단계의 action이 두번째 단계의 input으로 입력됨)
+3. n분 동안 구동된 전략의 sortino ratio를 고려해서 적절한 reward를 return (off-policy 전략이기때문에 M번 샘플링)
 4. n분 이후부터 다시 재학습을 시작한다. 
