@@ -1,5 +1,3 @@
-# Happy New Year
-
 # Cryrto scalping RL Agent
 # **프로젝트 목표**
 Binance api를 연결후 BTC-USTD 선물거래
