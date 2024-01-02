@@ -1,4 +1,4 @@
-# Cryrto scalping RL Agent
+# Cryrto scalping RL Agent(잠정중단)
 # **프로젝트 목표**
 Binance api를 연결후 BTC-USTD 선물거래
 <br>
@@ -49,10 +49,22 @@ Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 D
 #### Architecture: [link](https://github.com/donghui-0126/crypto-scalping-RL-Agent/blob/main/Scalping%20bot.svg)
 
 -------
+### 중단 사유
+- version1의 방식으로 reward를 return하려면 매 거래마다 얼마나 sharpe ratio에 좋은 영향을 미쳤는지 계산해야함. 하지만 방법을 모르겠음.
+- version2의 경우 model-based learning에 가까운 것 같음.
+- model-based learning이라면 조금 더 공부하는게 좋을 것 같음.
+- 굳이 전략찾기를 RL로..? 라는 생각이 듦
+
+### 발전 방향
+- action마다 적절한 reward를 주는 방법을 찾기
+- model-based 모델이라면 차라리 MM을 아래 논문을 기반으로 RL로 해보자
+- (Transformers for Limit Order Books)[https://arxiv.org/abs/2003.00130]
+- (world model)[https://arxiv.org/abs/1803.10122]
+- (Transformers are sample-efficient world models)[https://arxiv.org/pdf/2209.00588]
 
 
 ### **프로젝트 기간**
-* Project Period : 2023/10 ~~ (진행중)
+* Project Period : 2023/10 ~~ (중단)
 
 <br>
 
