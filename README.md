@@ -46,7 +46,7 @@ Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 D
     2. Simulate Strategy N times (Reward = Sortino Ratio)
     3. Get Reward that Expectation of N times simulated Reward
 
-#### Architecture: [link](https://github.com/donghui-0126/crypto-scalping-RL-Agent/blob/main/Scalping_bot.svg)
+#### Architecture: [link](https://github.com/donghui-0126/crypto-scalping-RL-Agent/blob/main/Scalping%20bot.svg)
 
 -------
 
