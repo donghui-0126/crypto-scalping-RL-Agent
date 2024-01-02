@@ -58,9 +58,9 @@ Rule-Base 모델을 Rule-base기반 모델이 생성한 데이터로 학습된 D
 ### 발전 방향
 - action마다 적절한 reward를 주는 방법을 찾기
 - model-based 모델이라면 차라리 MM을 아래 논문을 기반으로 RL로 해보자
-- (Transformers for Limit Order Books)[https://arxiv.org/abs/2003.00130]
-- (world model)[https://arxiv.org/abs/1803.10122]
-- (Transformers are sample-efficient world models)[https://arxiv.org/pdf/2209.00588]
+- [Transformers for Limit Order Books](https://arxiv.org/abs/2003.00130)
+- [world model](https://arxiv.org/abs/1803.10122)
+- [Transformers are sample-efficient world models](https://arxiv.org/pdf/2209.00588)
 
 
 ### **프로젝트 기간**
