@@ -1,4 +1,4 @@
-# Crypto Scalping RL Agent (On Hold)
+# Crypto Scalping RL Agent
 
 ## **Project Objectives**
 Connect to the Binance API and implement BTC-USDT futures trading.
