@@ -29,36 +29,17 @@ The data used is 1-minute candlestick data for Bitcoin from Upbit. Input data in
 - The price is assumed to be the **(high + low)/2** at which trades are executed.
 - The assumption is made that after the agent places buy/sell orders, all orders are executed within the next minute.
 
-### **Version Information**
+### Version 1.0
 * Version 1.1: Uses DNN, only utilizes price data.
 * Version 1.2: Uses CNN, includes technical indicators.
 * Version 1.3: Simplifies actions in version_2.
 * Version 1.4: Adds entropy term to the loss value, uses batch normalization.
 
-* **Version 2.0: Change in Agent Direction**
-  * **Version 2.0 Algorithm** 
-    1. Select Strategy Duration
-    2. Simulate Strategy N times (Reward = Sortino Ratio)
-    3. Obtain Reward, the Expectation of N times simulated Reward
-
-#### Architecture: [link](https://github.com/donghui-0126/crypto-scalping-RL-Agent/blob/main/Scalping%20bot.svg)
-
--------
-### **Reason for Pause**
-- To return the reward in the version1 manner, it is necessary to calculate how much the Sharpe ratio has positively influenced after each trade. However, the method is unclear.
-- For version2, it seems more like model-based learning.
-- If it's model-based learning, it might be better to study a bit more.
-- The thought of using RL to find a strategy.
-
-### **Future Directions**
-- Find a way to give appropriate rewards for each action.
-- If it's a model-based model, it might be better to use RL for Market Making based on the following papers:
-  - [Transformers for Limit Order Books](https://arxiv.org/abs/2003.00130)
-  - [World Model](https://arxiv.org/abs/1803.10122)
-  - [Transformers are sample-efficient world models](https://arxiv.org/pdf/2209.00588)
+### **Version 3.0: 
+* Version 3.0: use Stable-baseline3/Gymnasium (Ongoing)
 
 ### **Project Duration**
-* Project Period: 2023/10 ~~ (On Hold)
+* Project Period: 2023/10 ~~ 
 
 <br>
 
