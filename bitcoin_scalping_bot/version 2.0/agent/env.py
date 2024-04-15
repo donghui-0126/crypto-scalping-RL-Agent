@@ -1,11 +1,12 @@
 from collections import deque
 from datetime import datetime
+import gymnasium as gym
 
-
-class Environment5:
+class Environment(gym.Env):
     def __init__(self, chart_data=None, raw_data=None,chart_index:list = None, risk_adverse= 1.3 ,balance=100000000, transaction=0.0004, max_leverage=10):
+        
         self.chart_data = chart_data # numpy array
-        self.raw_data = raw_data
+        self.raw_data = raw_data     # 
         self.chart_index = chart_index # python list
         self.idx = 0
 

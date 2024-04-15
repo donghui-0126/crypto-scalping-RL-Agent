@@ -10,3 +10,4 @@ data/final_df.csv
 data/df_final.csv
 data/df_final.pkl
 data/upbit_data/train_data_2023_3D_version4.pkl
+data/train_data/df_final.pkl

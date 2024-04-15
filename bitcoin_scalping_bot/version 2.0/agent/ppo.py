@@ -12,16 +12,16 @@ import numpy as np
 import math
 
 
-class PPO5(nn.Module):
-    def __init__(self, action_num=5, len_action_position = 64, learning_rate=0.001, gamma=0.98, lmbda=0.9, eps_clip=0.001, K_epoch=5):
-        super(PPO4, self).__init__()
+class PPO(nn.Module):
+    def __init__(self, num_duration=3, num_action=5, len_action_position = 64, learning_rate=0.001, gamma=0.98, lmbda=0.9, eps_clip=0.001, K_epoch=5):
+        super(PPO, self).__init__()
         self.data = [] # transition을 저장하는 임시 공간
-        self.action_num = action_num
+        self.num_action = num_action
         self.len_action_position = len_action_position
         self.learning_rate = learning_rate
         self.gamma = gamma
         self.lmbda = lmbda
-        self.eps_clip=eps_clip
+        self.eps_clip=eps_clip  
         self.K_epoch = K_epoch
 
         self.conv2d_1 = nn.Conv2d(in_channels=1, out_channels=8, kernel_size=(12, 2), stride=(12, 2))
@@ -31,16 +31,21 @@ class PPO5(nn.Module):
         self.conv2d_3 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=(1, 9), stride=1)
         self.bn3 = nn.BatchNorm2d(32)
 
-        self.lstm1 = nn.LSTM(512, 64)
+        self.lstm1 = nn.LSTM(512+self.len_action_position, 64)
 
+        # duration network와 action network는 첫층을 공유함
         self.fc_pi1 = nn.Linear(64, 32)
-        self.fc_pi2 = nn.Linear(32 + len_action_position, 32)
-        self.fc_pi3 = nn.Linear(32, action_num)
+
+        self.fc_pi2 = nn.Linear(32, 16)
+        self.fc_pi3 = nn.Linear(16, num_duration)
+        
+        self.fc_pi5 = nn.Linear(32, 16)
+        self.fc_pi6 = nn.Linear(16, num_action)
         
 
         self.fc_v1 = nn.Linear(64, 32)
-        self.fc_v2 = nn.Linear(32 + len_action_position, 32)
-        self.fc_v3 = nn.Linear(32, 1)        
+        self.fc_v2 = nn.Linear(32, 16)
+        self.fc_v3 = nn.Linear(16, 1)        
 
         self.optimizer = optim.SGD(self.parameters(), lr=learning_rate)
 
@@ -84,8 +89,6 @@ class PPO5(nn.Module):
 
     def make_batch(self):
         s_lst, a_lst, r_lst, s_prime_lst, prob_a_lst, h_in_lst, h_out_lst, done_lst, action_position_lst = [], [], [], [], [], [], [], [], []
-
-
         for transition in self.data:
             s, a, r, s_prime, prob_a, h_in, h_out, done, action_position = transition
             s_lst.append(s)

@@ -1,7 +1,7 @@
 import torch
 from torch.distributions import Categorical 
-from env5 import Environment5
-from ppo5 import PPO5
+from env import Environment
+from ppo import PPO
 import tqdm
 import pandas as pd
 import numpy as np
@@ -30,10 +30,10 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverag
     print("데이터 전처리 완료...")
     
     if model_name=="ppo4":
-        model = PPO4(learning_rate=0.001, eps_clip=0.1, K_epoch=3, action_num=num_action)
+        model = PPO(learning_rate=0.001, eps_clip=0.1, K_epoch=3, action_num=num_action)
 
     
-    env = Environment4(df_final, df_raw, risk_adverse = risk_adverse, transaction=transaction, max_leverage=max_leverage)
+    env = Environment(df_final, df_raw, risk_adverse = risk_adverse, transaction=transaction, max_leverage=max_leverage)
     state = env.reset()
         
     h1_out = (torch.zeros([1, 1, 64], dtype=torch.float), torch.zeros([1, 1, 64], dtype=torch.float))
@@ -60,6 +60,16 @@ def main(model_name, risk_adverse, epochs = 100, transaction=0.0002, max_leverag
         while not done:
             for t in range(T_horizon):
                 h1_in = h1_out
+                
+                # 1step Training... 
+                # duration = agent.get_duration(state)
+                # for i in duration:
+                #       action_prob, h1_out = model.action_pi()
+                #       action = Categorical(action_prob)
+                #       return = env.get_return(action)
+                #       state = env.step()
+                #       return_list.append(return)
+                # reward = get_sortino(return_list)
                 
                 prob, h1_out = model.pi(torch.from_numpy(state).float(), h1_in, torch.tensor(temp_action_position))
                 
